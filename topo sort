@@ -1,0 +1,31 @@
+Topological Sort(DFS) : It only works on DAG(directed acyclic graph)
+-because if it was undirected then there will be one edge from A to B, and from B to A, and we cannot give 
+one specific order for  that, so we cannot have a topological sort for undirected graph
+-if there is a cycle, between a b and c then, they can never be placed in sorting order one after other, 
+coz that won't be possible
+
+linear ordering of vertices such that if there is an edge between u&v, u appears before v in that ordering
+
+
+void dfs(int node, vector<int> &vis, vector<int> &adj, stack<int> &s){
+    vis[node]=1;
+    for(auto ne:adj[node]){
+        if (!vis[ne]) dfs(ne, vis, adj, s);
+    }
+    s.push(node);
+}
+
+vector<int> topoSort(int n, vector<int> adj){
+    vector<int> vis(n, 0);
+    stack<int> s;
+    for(int i=0;i<n;i++){
+        if (!vis[i]) dfs(i, vis, adj, s);
+    }
+    vector<int> ans;
+    while(!s.empty()){
+        int node=s.top();
+        s.pop();
+        ans.push_back(node);
+    }
+    return ans;
+}
