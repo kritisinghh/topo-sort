@@ -1,0 +1,73 @@
+class Solution {
+    /*
+    vector<bool> safe_nodes;
+
+    bool checkSafeState(vector<vector<int>>& graph, vector<int>& visited, int curr) {
+        visited[curr] = 1;
+        bool is_safe = true;
+        for (int neighbor : graph[curr]) {
+            if (visited[neighbor] == 0) {
+                is_safe &= checkSafeState(graph, visited, neighbor);
+            } else if (visited[neighbor] == 1) {
+                return safe_nodes[curr] = false;
+            } else if (visited[neighbor] == 2) {
+                is_safe &= safe_nodes[neighbor];
+            }
+        }
+        visited[curr] = 2;
+        return safe_nodes[curr] = is_safe;
+    }
+    */
+public:
+    vector<int> eventualSafeNodes(vector<vector<int>>& graph) {
+        /*
+        int n = graph.size();
+        safe_nodes = vector<bool>(n, true);
+        vector<int> visited(n, 0);
+        for (int i = 0; i < n; i++) {
+            if (visited[i] == 0) {
+                checkSafeState(graph, visited, i);
+            }
+        }
+        vector<int> ans;
+        for (int i = 0; i < n; i++) {
+            if (safe_nodes[i]) {
+                ans.push_back(i);
+            }
+        }
+        return ans;
+        */
+        int n=graph.size();
+        vector<vector<int>> revadj(n);
+        vector<int> indegree(n, 0);
+        for(int i=0;i<n;i++){
+            for(auto it:graph[i]){
+                revadj[it].push_back(i);
+                indegree[i]++;
+            }
+        }
+        queue<int> q;
+        for(int i=0;i<n;i++){
+            if (indegree[i]==0) q.push(i);
+        }
+        // vector<int> safe;
+        vector<bool> safe(n, false);
+        while(!q.empty()){
+            int node=q.front();
+            q.pop();
+            // safe.push_back(node);
+            safe[node]=true;
+            for(auto it:revadj[node]){
+                indegree[it]--;
+                if (indegree[it]==0) q.push(it);
+            }
+        }
+        // sort(safe.begin(), safe.end());
+        // return safe;
+        vector<int> ans;
+        for(int i=0;i<n;i++){
+            if (safe[i]==true) ans.push_back(i);
+        }
+        return ans;
+    }
+};
