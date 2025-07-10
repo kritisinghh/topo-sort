@@ -1,0 +1,35 @@
+Topological Sorting(BFS) (Kahn's Algorithm) : only valid in DAG(Directed acyclic graph)
+-linear ordering of vertices such that if there is an edge between
+u & v, u appears before v in the ordering
+
+
+Kahn's Algorithm is a method to perform topological sorting on a directed acyclic graph (DAG) by:
+-Tracking nodes with no incoming edges.
+-Removing those nodes and updating neighbors' in-degrees.
+-Repeating until all nodes are processed or a cycle is detected.
+It's used to order tasks with dependencies.
+
+
+vector<int> topoSort(int n, vector<int> adj){
+    vector<int> indegree(n, 0);
+    for(int i=0;i<n;i++){
+        for(auto it:adj[i]){
+            indegree[it]++;
+        }
+    }
+    queue<int> q;
+    for(int i=0;i<n;i++){
+        if (indegree[i]==0) q.push(i);
+    }
+    vector<int> ans;
+    while(!q.empty()){
+        int node=q.front();
+        q.pop();
+        ans.push_back(node);
+        for(auto it:adj[node]){
+            indegree[it]--;
+            if (indegree[it]==0) q.push(it);
+        }
+    }
+    return ans;
+}
